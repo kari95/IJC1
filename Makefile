@@ -8,10 +8,16 @@ CC=gcc
 CFLAGS=-O2 -std=c99 -pedantic -Wall -Wextra -lm -m64 -g
 SHELL=C:/Windows/System32/cmd.exe
 
-all: prvocisla.exe steg-decode.exe
+%.o: ../%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-prvocisla.exe: prvocisla.c error.c error.h eratosthenes.c eratosthenes.h bit-array.h
-	$(CC) $(CFLAGS) error.c eratosthenes.c prvocisla.c -o prvocisla.exe -Wl,--stack,100000000
+all: prvocisla steg-decode prvocisla-inline
 
-steg-decode.exe: steg-decode.c ppm.c ppm.h error.c error.h eratosthenes.c eratosthenes.h bit-array.h
-	$(CC) $(CFLAGS) ppm.c error.c eratosthenes.c steg-decode.c -o steg-decode.exe -Wl,--stack,100000000
+prvocisla: prvocisla.o error.o eratosthenes.o
+	$(CC) $(CFLAGS) error.o eratosthenes.o prvocisla.o -o prvocisla
+
+prvocisla-inline: prvocisla.o error.o eratosthenes.o
+	$(CC) $(CFLAGS) -DUSE_INLINE error.o eratosthenes.o prvocisla.o -o prvocisla-inline
+
+steg-decode: steg-decode.o ppm.o ppm.h error.o eratosthenes.o
+	$(CC) $(CFLAGS) ppm.c error.c eratosthenes.c steg-decode.c -o steg-decode

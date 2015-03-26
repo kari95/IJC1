@@ -9,7 +9,7 @@
 #include "error.h"
 
 int main()
-{ 
+{  
     BA_create(array, 201000000);  
     Eratosthenes(array);
     unsigned long lenght = BA_size(array);
