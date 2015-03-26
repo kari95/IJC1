@@ -13,16 +13,13 @@ int main()
     BA_create(array, 201000000);  
     Eratosthenes(array);
     unsigned long lenght = BA_size(array);
-    int index = 10;
     unsigned int prvocisla[10];
-    for (unsigned long i = lenght - 1; i > 0; i--)
+    for (int i = 10; i >= 0; i--)
     {
-        if (!BA_get_bit(array, i))
-            prvocisla[--index] = i;
-        if (index == 0)
-            break;
+        if (!BA_get_bit(array, lenght - i - 1))
+            prvocisla[i] = lenght - i - 1;
     }
-    for (index = 0; index < 10; index++)
-        printf("%u\n", prvocisla[index]);
+    for (int i = 0; i < 10; i++)
+        printf("%u\n", prvocisla[i]);
     return 0;
 } 

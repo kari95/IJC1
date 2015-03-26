@@ -5,19 +5,30 @@
 
 # Compiler options
 CC=gcc
-CFLAGS=-O2 -std=c99 -pedantic -Wall -Wextra -lm -m64 -g
-SHELL=C:/Windows/System32/cmd.exe
+CFLAGS=-O2 -std=c99 -pedantic -Wall -Wextra -g 
 
-%.o: ../%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+all: prvocisla prvocisla-inline steg-decode
 
-all: prvocisla steg-decode prvocisla-inline
+eratosthenes.o: eratosthenes.c bit-array.h error.h
+	$(CC) $(CFLAGS) -c eratosthenes.c
+
+error.o: error.c error.h
+	$(CC) $(CFLAGS) -c error.c
+
+ppm.o: ppm.c ppm.h error.h
+	$(CC) $(CFLAGS) -c ppm.c
+
+prvocisla.o: prvocisla.c bit-array.h error.h eratosthenes.h
+	$(CC) $(CFLAGS) -c prvocisla.c
+
+steg-decode.o: steg-decode.c bit-array.h error.h eratosthenes.h ppm.h
+	$(CC) $(CFLAGS) -c steg-decode.c
 
 prvocisla: prvocisla.o error.o eratosthenes.o
-	$(CC) $(CFLAGS) error.o eratosthenes.o prvocisla.o -o prvocisla
+	$(CC) $(CFLAGS) prvocisla.o error.o eratosthenes.o -o prvocisla -lm
 
 prvocisla-inline: prvocisla.o error.o eratosthenes.o
-	$(CC) $(CFLAGS) -DUSE_INLINE error.o eratosthenes.o prvocisla.o -o prvocisla-inline
+	$(CC) $(CFLAGS) -DUSE_INLINE prvocisla.o error.o eratosthenes.o -o prvocisla-inline -lm
 
 steg-decode: steg-decode.o ppm.o ppm.h error.o eratosthenes.o
-	$(CC) $(CFLAGS) ppm.c error.c eratosthenes.c steg-decode.c -o steg-decode
+	$(CC) $(CFLAGS) steg-decode.o ppm.o error.o eratosthenes.o -o steg-decode -lm
