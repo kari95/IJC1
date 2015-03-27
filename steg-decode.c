@@ -41,7 +41,8 @@ int main(int argc, char **argv)
     if (argc > 1)
     {
         image = ppm_read(argv[1]);
-        decode(image);
+        if (image != NULL)
+            decode(image);
         free(image);
     }
     else
